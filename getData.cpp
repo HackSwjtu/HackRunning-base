@@ -250,30 +250,25 @@ vector<int>  getPath(vector<int>pointV, int setDis){
 	finalPath . push_back(S);
 	while(nowDis < setDis * 1000.0){
 		S = finalPath.back();
-		if(pointV.size()){
-			int T = rand()%pointV.size();
-			T = pointV[T];
-			vector<int>pathST = spfa(S);
-			stack<int>st;
-			while(T != S ){
-				st.push(T);
-				T = pathST[T];
-				for(int i = 0; i < (int)pointV.size(); ++i){
-					if(V[T].disToPoint(V[pointV[i]]) < 50.0  )
-						pointV.erase(pointV.begin()+i);
-				}
+		int T;
+		if(pointV.size())
+			T = rand()%pointV.size();
+		else T = rand()%V.size();
+		if(pointV.size()) T = pointV[T];
+		vector<int>pathST = spfa(S);
+		stack<int>st;
+		while(T != S ){
+			st.push(T);
+			T = pathST[T];
+			for(int i = 0; i < (int)pointV.size(); ++i){
+				if(V[T].disToPoint(V[pointV[i]]) < 50.0  )
+					pointV.erase(pointV.begin()+i);
 			}
-			while(!st.empty()){
-				nowDis+=V[finalPath.back()].disToPoint(V[st.top()]);
-				finalPath.push_back(st.top());
-				st.pop();
-			}
-		}else{
-			int u = finalPath.back();
-			int to = rand()%E[u].size();
-			to = E[u][to].second;
-			nowDis+=V[u].disToPoint(V[to]);
-			finalPath.push_back(to);
+		}
+		while(!st.empty()){
+			nowDis+=V[finalPath.back()].disToPoint(V[st.top()]);
+			finalPath.push_back(st.top());
+			st.pop();
 		}
 	}
 	return finalPath;
