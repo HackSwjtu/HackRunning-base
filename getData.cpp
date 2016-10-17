@@ -227,7 +227,7 @@ vector<int>spfa(int S){
 		int u = q.front(); q.pop();
 		in[u] = false;
 		int sz = E[u].size(),beg = rand()%(min(sz/10+1,5)) ;
-		for(int i = beg; i < sz; ++i){
+		for(int i = 0; i < sz; ++i){
 			if(dis[u] + E[u][i].first < dis[E[u][i].second] ){
 				dis[E[u][i].second] = dis[u] + E[u][i].first;
 				pre[E[u][i].second] = u;
