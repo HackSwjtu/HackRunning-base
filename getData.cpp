@@ -19,7 +19,7 @@ using namespace std;
 const double eps = 1e-8;
 const int inf = 0x3f3f3f3f;
 const double PI = 3.1415926535897932384626;
-#define EDGE_MAX_DIS (30.0)
+#define EDGE_MAX_DIS (50.0)
 
 #ifdef HandsomeHow
 #define dbg(x) cerr << #x << " = " << x << endl
