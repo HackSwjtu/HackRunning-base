@@ -6,7 +6,15 @@
     > Created Time: 2016年10月15日 星期六 18时14分09秒
  ************************************************************************/
 
-#include <bits/stdc++.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <map>
+#include <algorithm>
+#include <string>
+#include <cmath>
 using namespace std;
 const double eps = 1e-8;
 const int inf = 0x3f3f3f3f;
@@ -19,9 +27,9 @@ const double PI = 3.1415926535897932384626;
 #define dbg(x)
 #endif
 // (づ°ω°)づe★------------------------------------------------
-
+map<string,string>msg;
 fstream input, output;
-
+string username,password;
 class Time{
 private:
 		time_t _baseTime;
@@ -84,20 +92,74 @@ public:
 
 };
 
+static const std::string base64_chars =   
+             "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  
+             "abcdefghijklmnopqrstuvwxyz"  
+             "0123456789+/";  
+  
+  
+static inline bool is_base64(unsigned char c) {  
+  return (isalnum(c) || (c == '+') || (c == '/'));  
+}  
+  
+std::string base64_encode(char const* bytes_to_encode, unsigned int in_len) {  
+  std::string ret;  
+  int i = 0;  
+  int j = 0;  
+  unsigned char char_array_3[3];  
+  unsigned char char_array_4[4];  
+  
+  while (in_len--) {  
+    char_array_3[i++] = *(bytes_to_encode++);  
+    if (i == 3) {  
+      char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;  
+      char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);  
+      char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);  
+      char_array_4[3] = char_array_3[2] & 0x3f;  
+  
+      for(i = 0; (i <4) ; i++)  
+        ret += base64_chars[char_array_4[i]];  
+      i = 0;  
+    }  
+  }  
+  
+  if (i)  
+  {  
+    for(j = i; j < 3; j++)  
+      char_array_3[j] = '\0';  
+  
+    char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;  
+    char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);  
+    char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);  
+    char_array_4[3] = char_array_3[2] & 0x3f;  
+  
+    for (j = 0; (j < i + 1); j++)  
+      ret += base64_chars[char_array_4[j]];  
+  
+    while((i++ < 3))  
+      ret += '=';  
+  
+  }  
+  
+  return ret;  
+  
+}  
+
+
 vector<vector<pair<double,int> > >E;
 vector<Point>V;
 vector<Point>okV;
 
 void addPoint(){
 	double x,y;
-	input.open("./handsomehow/okPoint.txt");
+	input.open("okPoint.txt");
 	for(int i = 0; i < 16; ++i){
 		input>>x>>y;
 		okV.push_back(Point(x,y));
 	}
 	input.close();
 
-	input.open("./handsomehow/pathPoint.txt");
+	input.open("pathPoint.txt");
 	while(input>>y>>x)
 		V.push_back(Point(x,y));
 	input.close();
@@ -136,7 +198,7 @@ void initEdge(){
 }
 
 vector<int> getTar(){
-	input.open("./handsomehow/T.txt");
+	input.open("T.txt");
 	vector<int>ret;
 	int sz = V.size();
 	double lat,lng;
@@ -245,10 +307,11 @@ string doubleToStr(double x){
 	return ret;
 }
 
-void outPutAllLocJson(vector<int>&path, time_t flag){
-	output.open("./handsomehow/AllLocJson.txt");
+void outPutAllLocJson(vector<int>&path, long long flag){
+	string Tmp = "allLocJson";
+	//output.open("AllLocJson.txt");
 	Point lst = V[path[1]];
-	time_t tmp = flag;
+	long long tmp = flag;
 	double totalDis = rand()%100*1.0/10;
 	int totalTime = rand()%15;
 	Time mytime;
@@ -298,18 +361,48 @@ void outPutAllLocJson(vector<int>&path, time_t flag){
 	 	if(i!=sz-1) s=s+",";
 	 	lst = pot;
 	}
-
+	
 	s = s + "]\'";
-	output<<s<<endl;
-	output.close();
+	msg["totalTime"] = intToStr(totalTime);
+	msg["speed"] = doubleToStr(totalTime*1.0/totalDis/60*1000);
+	msg["totalDis"] = doubleToStr(totalDis/1000);
+	msg["stopTime"] = intToStr(flag+totalTime*1000+rand()%1000);
+	msg[Tmp]=s;
+	//output<<s<<endl;
+	//output.close();
 }
 
-void outPutFivePointJson(vector<int>P, time_t flag){
-	time_t tmp = flag;
+string Hash(int len, int tp){
+	string tmp = username.substr(3,6);
+	string tab =  "9783512460ABCDEF";
+	string ret;
+	int idx = 0;
+	while(ret.length()<len){
+		idx++;
+		idx%=username.length();
+		int k = tmp[idx]-'0';
+		k*=31;
+		k%=password.length();
+		k*=100007;
+		k%=tp;
+		ret=ret+tab[k];
+	}
+	return ret;
+}
+
+void getMsg(){
+	msg["DeviceId"] = Hash(15,10);
+	msg["CustomDeviceId"] = Hash(32,16);
+}
+
+
+void outPutFivePointJson(vector<int>P, long long flag){
+	string Tmp = "fivePointJson";
+	long long tmp = flag;
 	string tmps = intToStr((long long)tmp);
 	Time mytime;
 	mytime.gettime();
-	output.open("./handsomehow/FivePointJson.txt");
+	//output.open("./handsomehow/FivePointJson.txt");
 	int fix = rand()%5;
 	string s = "\'[";
 	for(int i = 0; i < 5; ++i){
@@ -324,22 +417,63 @@ void outPutFivePointJson(vector<int>P, time_t flag){
 	}
 
 	s = s + "]\'";
-	output<<s<<endl;
-	output.close();
+	
+	msg[Tmp]=s;
+	//output<<s<<endl;
+	//output.close();
 }
 
+void readMsg(){
+	cout<<"username:";
+	cin>>username;
+	cout<<"password:";
+	cin>>password;
+	string tmp = username+":"+password;
+	msg["Authorization"] = base64_encode(tmp.data(),tmp.length());
+}
+
+
+void outTemplate(){
+	input.open("template.txt");	
+	output.open("Go.py");
+	string str;
+	while(input>>str){
+		//cerr<<str<<endl;
+		if(str == "T")
+			output<<"   ";
+		else if(str == "#"){
+			input>>str;
+			output<<msg[str];
+		}else if(str == "X")
+			output<<endl;
+		else if(str == "SQ")
+			output<<" ";
+		else 
+			output<<str;
+		
+	}
+	output.close();
+	input.close();
+}
 
 
 int main(){
 	srand(time(0));
+	readMsg();
+	getMsg();
 	addPoint();
 	initEdge();
 	int setDis = 3;
 	//int setDis = rand()%3+1;	//in range[1,3];
 	vector<int>T = getTar(); 
 	vector<int> path = getPath(T, setDis);
-	time_t flag = time(0)*1000+rand()%1000;
+	long long flag = time(0)*1000ll+rand()%1000;
+	msg["starttime"] = intToStr(flag);
 	outPutFivePointJson(T,flag);
 	outPutAllLocJson(path,flag);
+	//output.open("Go.py");
+	//for(auto it:msg) output<<it.first<<" "<<it.second<<endl;
+	outTemplate();
+	cerr<<"Finish"<<endl;
 	return 0;
 }
