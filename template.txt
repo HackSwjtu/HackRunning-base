@@ -5,7 +5,7 @@ T    fivePointJson_new SQ = SQ # fivePointJson 							X
 T    allLocJson_new SQ = SQ # allLocJson 							X
 T    fivePointJson_dict SQ = SQ {"fivePointJson":fivePointJson_new, 'useZip':"false"} 		X
 T    allLocJson_dict SQ = SQ {'allLocJson':allLocJson_new, 'useZip':"false"}  			X
-T    url='http://gxapp.iydsj.com/api/v2/users/48405/running_records/add'   		X
+T    url='http://gxapp.iydsj.com/api/v2/users/ # uid /running_records/add'   		X
 T   headers={  										X
 T T        "appVersion": SQ "1.2.1", 								X
 T T        "CustomDeviceId": SQ " # CustomDeviceId ", 						X
