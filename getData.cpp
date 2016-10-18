@@ -6,6 +6,7 @@
     > Created Time: 2016年10月15日 星期六 18时14分09秒
  ************************************************************************/
 
+#include <ctime>
 #include <iostream>
 #include <fstream>
 #include <vector>
