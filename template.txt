@@ -12,7 +12,7 @@ T T        "CustomDeviceId": SQ " # CustomDeviceId ", 						X
 T T        "DeviceId": SQ " # DeviceId   ",  							X
 T T        "osType": SQ "0",   								X
 T T        "source": SQ "000049", 								X
-T T        "uid": SQ "48405",    								X
+T T        "uid": SQ " # uid ",    								X
 T T        "Authorization":"Basic SQ # Authorization ",   					X
 T    } 											X
 T    json={ 										X

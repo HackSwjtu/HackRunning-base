@@ -389,6 +389,7 @@ string Hash(int len, int tp){
 void getMsg(){
 	msg["DeviceId"] = Hash(15,10);
 	msg["CustomDeviceId"] = Hash(32,16);
+	msg["uid"] = Hash(5,10);
 }
 
 
