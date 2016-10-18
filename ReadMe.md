@@ -14,7 +14,7 @@ Hack runs without legs.
 python解释器（如果没有requests模块请自行安装）
 C++编译器
 
-* 将所有文件放到统一文件下(如果是用VS2010等IDE建立工程，请将除getdate.cpp外的所有文件复制到编译生成的getDate.exe同一目录下)
+* 将所有文件放到统一文件下 (如果是用VS2010等IDE建立工程，请将除getdate.cpp外的所有文件复制到编译生成的getDate.exe同一目录下)
 * 打开 `T.txt` 和 `okPoint.txt` ，从 `okPoint.txt` 中选5行替换 `T.txt`
 * 打开 `Go.py` ，如果里面有东西请删光
 * 自行编译运行 `getDate.cpp` 并输入自己的账号信息，若程序3秒未提示成功或崩溃，请从第3步骤重新开始
