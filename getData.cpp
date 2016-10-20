@@ -6,12 +6,14 @@
     > Created Time: 2016年10月15日 星期六 18时14分09秒
  ************************************************************************/
 
+#include <cstring>
 #include <ctime>
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <queue>
 #include <stack>
+#include <set>
 #include <map>
 #include <algorithm>
 #include <string>
@@ -20,10 +22,12 @@ using namespace std;
 const double eps = 1e-8;
 const int inf = 0x3f3f3f3f;
 const double PI = 3.1415926535897932384626;
-#define EDGE_MAX_DIS (50.0)
+
+#define EDGE_MAX_DIS					45.0
+#define OK_POINT_SIZE					13
 
 #ifdef HandsomeHow
-#define dbg(x) cerr << #x << " = " << x << endl
+#define dbg(x)							cerr << #x << " = " << x << endl
 #else
 #define dbg(x)
 #endif
@@ -69,14 +73,9 @@ public:
 	bool operator ==(Point &p){
 		return (fabs(p.lat - lat)<eps && fabs(p.lng - lng)<eps );
 	}
-	void outPut(){
-		output<<lat<<" "<<lng<<endl;
-	}
+	void outPut(){ output<<lat<<" "<<lng<<endl;}
 
-
-	void errPut(){
-		cerr<<lat<<" "<<lng<<endl;
-	}
+	void errPut(){ cerr<<lat<<" "<<lng<<endl;}
 	
 
 	double disToPoint(Point &p){
@@ -139,11 +138,9 @@ std::string base64_encode(char const* bytes_to_encode, unsigned int in_len) {
   
     while((i++ < 3))  
       ret += '=';  
-  
   }  
-  
+
   return ret;  
-  
 }  
 
 
@@ -154,7 +151,7 @@ vector<Point>okV;
 void addPoint(){
 	double x,y;
 	input.open("okPoint.txt");
-	for(int i = 0; i < 16; ++i){
+	for(int i = 0; i < OK_POINT_SIZE; ++i){
 		input>>x>>y;
 		okV.push_back(Point(x,y));
 	}
@@ -167,13 +164,7 @@ void addPoint(){
 	
 //	cerr<<"get "<<V.size()<<" points"<<endl;
 
-	/*
-	int cnt[18];
-	for(int i = 0; i < 16; ++i)
-		cnt[i]=0;
-	*/
-
-	for(int i = 0; i < 16; ++i) 
+	for(int i = 0; i < (int)okV.size(); ++i) 
 		V.push_back(okV[i]);
 }
 
@@ -199,21 +190,17 @@ void initEdge(){
 }
 
 vector<int> getTar(){
-	input.open("T.txt");
 	vector<int>ret;
-	int sz = V.size();
-	double lat,lng;
-	for(int i = 0; i < 5; ++i){
-		input>>lat>>lng;
-		Point tmp = Point(lat,lng);
-		for(int j = sz-1; ; --j){
-			if(V[j] == tmp){
-				ret.push_back(j);
-				break;
-			}
+	set<int>vis;
+	vis.insert(-1);
+	int sz = V.size() - 16;
+	while((int)ret.size() < 5 ){
+		int idx = -1;
+		while(vis.count(idx)){
+			idx = rand()%16 + sz;
 		}
+		ret.push_back(idx);
 	}
-	input.close();
 	return ret;
 }
 //read 5 points from txt
@@ -227,7 +214,7 @@ vector<int>spfa(int S){
 	while(!q.empty()){
 		int u = q.front(); q.pop();
 		in[u] = false;
-		int sz = E[u].size(),beg = rand()%(min(sz/10+1,5)) ;
+		int sz = E[u].size() ;
 		for(int i = 0; i < sz; ++i){
 			if(dis[u] + E[u][i].first < dis[E[u][i].second] ){
 				dis[E[u][i].second] = dis[u] + E[u][i].first;
@@ -271,7 +258,7 @@ vector<int>  getPath(vector<int>pointV, int setDis){
 			finalPath.push_back(st.top());
 			st.pop();
 		}
-	}
+	}	
 	return finalPath;
 }
 //return a valid path whth id
@@ -305,7 +292,6 @@ string doubleToStr(double x){
 
 void outPutAllLocJson(vector<int>&path, long long flag){
 	string Tmp = "allLocJson";
-	//output.open("AllLocJson.txt");
 	Point lst = V[path[1]];
 	long long tmp = flag;
 	double totalDis = rand()%100*1.0/10;
@@ -313,12 +299,13 @@ void outPutAllLocJson(vector<int>&path, long long flag){
 	Time mytime;
 	mytime.gettime();
 	int beginID = rand()%20+5;
-	string s = "\'[";
+	string s = "[";
 	int sz = path.size();
+	//for(int i = 0; i < sz; ++i){
 	for(int i = 0; i < sz; ++i){
 		totalTime+=5;
 		mytime.add(5);
-	 	s = s + "{\\\"gainTime\\\":\\\"" + intToStr((long long)mytime.currenttime->tm_year) + "-";
+	 	s = s + "{\\\\\\\"gainTime\\\\\\\":\\\\\\\"" + intToStr((long long)mytime.currenttime->tm_year) + "-";
 
 	 	if(mytime.currenttime->tm_mon<10) s=s+'0';
 	 	s=s+ intToStr((long long)mytime.currenttime->tm_mon) + "-" ;
@@ -335,37 +322,35 @@ void outPutAllLocJson(vector<int>&path, long long flag){
 	 	if(mytime.currenttime->tm_sec<10) s=s+'0';
 	 	s=s+ intToStr((long long)mytime.currenttime->tm_sec); 
 
-	 	s=s+"\\\",\\\"type\\\":";
+	 	s=s+"\\\\\\\",\\\\\\\"type\\\\\\\":";
 	 	if(i==0) s=s+"5";
 	 	else if (i==sz-1) s=s+"6";
 	 	else s=s+"0";
 
-	 	s=s+",\\\"avgSpeed\\\":\\\"";
+	 	s=s+",\\\\\\\"avgSpeed\\\\\\\":\\\\\\\"";
 	 	s=s+doubleToStr( (rand()%3000+1000) /1000.0 );
 
 	 	Point pot = V[path[i]];
 	 	totalDis+=lst.disToPoint(pot);
 
-	 	s=s+"\\\",\\\"flag\\\":"+intToStr((long long)tmp)+",\\\"lat\\\":\\\"";
-	 	s=s+doubleToStr(pot.lat)+"\\\",\\\"lng\\\":\\\""+doubleToStr(pot.lng)+"\\\",\\\"totalTime\\\":"+intToStr(totalTime);
-	 	s=s+",\\\"totalDis\\\":\\\""+doubleToStr(totalDis);
-	 	s=s+"\\\",\\\"speed\\\":\\\""+doubleToStr(1000.0/(lst.disToPoint(pot)/5.0)/60);
-	 	s=s+"\\\",\\\"radius\\\":"+intToStr(rand()%3+8)+"."+intToStr(rand()%10);
-	 	s=s+",\\\"locType\\\":61,\\\"id\\\":";
+	 	s=s+"\\\\\\\",\\\\\\\"flag\\\\\\\":"+intToStr((long long)tmp)+",\\\\\\\"lat\\\\\\\":\\\\\\\"";
+	 	s=s+doubleToStr(pot.lat)+"\\\\\\\",\\\\\\\"lng\\\\\\\":\\\\\\\""+doubleToStr(pot.lng)+"\\\\\\\",\\\\\\\"totalTime\\\\\\\":"+intToStr(totalTime);
+	 	s=s+",\\\\\\\"totalDis\\\\\\\":\\\\\\\""+doubleToStr(totalDis);
+	 	s=s+"\\\\\\\",\\\\\\\"speed\\\\\\\":\\\\\\\""+doubleToStr(1000.0/(lst.disToPoint(pot)/5.0)/60);
+	 	s=s+"\\\\\\\",\\\\\\\"radius\\\\\\\":"+intToStr(rand()%3+8)+"."+intToStr(rand()%10);
+	 	s=s+",\\\\\\\"locType\\\\\\\":61,\\\\\\\"id\\\\\\\":";
 	 	s=s+intToStr(i+beginID);
 	 	s=s+"}";
 	 	if(i!=sz-1) s=s+",";
 	 	lst = pot;
 	}
 	
-	s = s + "]\'";
+	s = s + "]";
 	msg["totalTime"] = intToStr(totalTime);
 	msg["speed"] = doubleToStr(totalTime*1.0/totalDis/60*1000);
 	msg["totalDis"] = doubleToStr(totalDis/1000);
 	msg["stopTime"] = intToStr(flag+totalTime*1000+rand()%1000);
 	msg[Tmp]=s;
-	//output<<s<<endl;
-	//output.close();
 }
 
 string Hash(int len, int tp){
@@ -373,7 +358,7 @@ string Hash(int len, int tp){
 	string tab =  "9783512460ABCDEF";
 	string ret;
 	int idx = 0;
-	while(ret.length()<len){
+	while((int)ret.length()<len){
 		idx++;
 		idx%=username.length();
 		int k = tmp[idx]-'0';
@@ -399,25 +384,22 @@ void outPutFivePointJson(vector<int>P, long long flag){
 	string tmps = intToStr((long long)tmp);
 	Time mytime;
 	mytime.gettime();
-	//output.open("./handsomehow/FivePointJson.txt");
 	int fix = rand()%5;
-	string s = "\'[";
+	string s = "[";
 	for(int i = 0; i < 5; ++i){
-		s=s+"{\\\"flag\\\":"+tmps+",\\\"lon\\\":\\\""+doubleToStr(V[P[i]].lng)+"\\\",\\\"lat\\\":\\\"";
+		s=s+"{\\\\\\\"flag\\\\\\\":"+tmps+",\\\\\\\"lon\\\\\\\":\\\\\\\""+doubleToStr(V[P[i]].lng)+"\\\\\\\",\\\\\\\"lat\\\\\\\":\\\\\\\"";
 		s=s+doubleToStr(V[P[i]].lat);
-		s=s+"\\\",\\\"isFixed\\\":";
+		s=s+"\\\\\\\",\\\\\\\"isFixed\\\\\\\":";
 		if(i==fix) s=s+"1";
 		else s=s+"0";
-		s=s+",\\\"isPass\\\":true,\\\"isFinal\\\":false,\\\"id\\\":";
+		s=s+",\\\\\\\"isPass\\\\\\\":true,\\\\\\\"isFinal\\\\\\\":false,\\\\\\\"id\\\\\\\":";
 		s=s+intToStr(i+66)+"}";
 		if(i!=4) s=s+",";
 	}
 
-	s = s + "]\'";
-	
+	s = s + "]";
+	//cerr<<s<<endl;
 	msg[Tmp]=s;
-	//output<<s<<endl;
-	//output.close();
 }
 
 void readMsg(){
@@ -435,7 +417,6 @@ void outTemplate(){
 	output.open("Go.py");
 	string str;
 	while(input>>str){
-		//cerr<<str<<endl;
 		if(str == "T")
 			output<<"   ";
 		else if(str == "#"){
@@ -447,12 +428,10 @@ void outTemplate(){
 			output<<" ";
 		else 
 			output<<str;
-		
 	}
 	output.close();
 	input.close();
 }
-
 
 int main(){
 	srand(time(0));
@@ -461,15 +440,12 @@ int main(){
 	addPoint();
 	initEdge();
 	int setDis = 3;
-	//int setDis = rand()%3+1;	//in range[1,3];
 	vector<int>T = getTar(); 
 	vector<int> path = getPath(T, setDis);
 	long long flag = time(0)*1000ll+rand()%1000;
 	msg["starttime"] = intToStr(flag);
 	outPutFivePointJson(T,flag);
 	outPutAllLocJson(path,flag);
-	//output.open("Go.py");
-	//for(auto it:msg) output<<it.first<<" "<<it.second<<endl;
 	outTemplate();
 	cerr<<"Finish"<<endl;
 	return 0;

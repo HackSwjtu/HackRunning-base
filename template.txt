@@ -1,38 +1,35 @@
-#coding: SQ utf-8    									X
+#coding: SQ utf-8    										X
 import SQ requests,time 									X
 def SQ main():   										X
-T    fivePointJson_new SQ = SQ # fivePointJson 							X
-T    allLocJson_new SQ = SQ # allLocJson 							X
-T    fivePointJson_dict SQ = SQ {"fivePointJson":fivePointJson_new, 'useZip':"false"} 		X
-T    allLocJson_dict SQ = SQ {'allLocJson':allLocJson_new, 'useZip':"false"}  			X
-T    url='http://gxapp.iydsj.com/api/v2/users/ # uid /running_records/add'   		X
-T   headers={  										X
+T    url='http://gxapp.iydsj.com/api/v2/users/ # uid /running_records/add'   			X
+T   headers={  											X
 T T        "appVersion": SQ "1.2.1", 								X
 T T        "CustomDeviceId": SQ " # CustomDeviceId ", 						X
 T T        "DeviceId": SQ " # DeviceId   ",  							X
-T T        "osType": SQ "0",   								X
+T T        "osType": SQ "0",   									X
 T T        "source": SQ "000049", 								X
 T T        "uid": SQ " # uid ",    								X
 T T        "Authorization":"Basic SQ # Authorization ",   					X
-T    } 											X
-T    json={ 										X
-T T        "allLocJson" :str(allLocJson_dict), 						X
-T T        'complete':'True', 								X
-T T        "fivePointJson":str(fivePointJson_dict), 					X
-T T        "isUpload":"false", 								X
-T T        "totalTime": # totalTime , 							X
-T T        "totalDis": # totalDis   , 							X
+T    } 												X
+T    json SQ = SQ { 										X
+T T        "allLocJson":"{\"allLocJson\":\" # allLocJson  \",\"useZip\":false}",		X
+T T        "complete":"true", 									X	
+T T        "fivePointJson":"{\"fivePointJson\":\" # fivePointJson \",\"useZip\":false}",	X
+T T        "isUpload":"false", 									X
+T T        "totalTime": # totalTime , 								X
+T T        "totalDis": # totalDis   , 								X
 T T        "speed": # speed		,							X
-T T        "stopTime": # stopTime   ,  							X
+T T        "stopTime": # stopTime   ,  								X
+T T        "abnormal":0,									X
 T T        "startTime": # starttime    ,							X
 T T        "sportType": 1, 									X
-T T        "selDistance": 3, 								X
+T T        "selDistance": 3, 									X
 T T        "unCompleteReason":0 								X
-T    } 											X
-T    s=requests.Session() 								X
-T    r=s.post(url, headers=headers, json=json) 						X
+T    } 												X
+T    s=requests.Session() 									X
+T    r=s.post(url, headers=headers, json=json) 							X
 T    print SQ  (r.content) 									X
-if SQ  __name__=='__main__': 								X
+if SQ  __name__=='__main__': 									X
 T    main() 										X
 
 
