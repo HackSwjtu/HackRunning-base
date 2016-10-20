@@ -25,6 +25,7 @@ const double PI = 3.1415926535897932384626;
 
 #define EDGE_MAX_DIS					40.0
 #define OK_POINT_SIZE					13
+#define MAX_REACH_DIS					50.0
 
 #ifdef HandsomeHow
 #define dbg(x)							cerr << #x << " = " << x << endl
@@ -207,11 +208,11 @@ vector<int> getTar(){
 	vector<int>ret;
 	set<int>vis;
 	vis.insert(-1);
-	int sz = V.size() - 16;
+	int sz = V.size() - okV.size();
 	while((int)ret.size() < 5 ){
 		int idx = -1;
 		while(vis.count(idx)){
-			idx = rand()%16 + sz;
+			idx = rand()%okV.size() + sz;
 		}
 		vis.insert(idx);
 		ret.push_back(idx);
@@ -264,7 +265,7 @@ vector<int>  getPath(vector<int>pointV, int setDis){
 			st.push(T);
 			T = pathST[T];
 			for(int i = 0; i < (int)pointV.size(); ++i){
-				if(V[T].disToPoint(V[pointV[i]]) < 50.0  )
+				if(V[T].disToPoint(V[pointV[i]]) < MAX_REACH_DIS  )
 					pointV.erase(pointV.begin()+i);
 			}
 		}
@@ -313,7 +314,7 @@ void outPutAllLocJson(vector<int>&path, long long flag){
 	int totalTime = rand()%15;
 	Time mytime;
 	mytime.gettime();
-	int beginID = rand()%20+5;
+	int beginID = rand()%2000+5;
 	string s = "[";
 	int sz = path.size();
 	//for(int i = 0; i < sz; ++i){
@@ -394,6 +395,7 @@ void getMsg(){
 
 
 void outPutFivePointJson(vector<int>P, long long flag){
+	int kk = rand()%200+3;
 	string Tmp = "fivePointJson";
 	long long tmp = flag;
 	string tmps = intToStr((long long)tmp);
@@ -408,7 +410,7 @@ void outPutFivePointJson(vector<int>P, long long flag){
 		if(i==fix) s=s+"1";
 		else s=s+"0";
 		s=s+",\\\\\\\"isPass\\\\\\\":true,\\\\\\\"isFinal\\\\\\\":false,\\\\\\\"id\\\\\\\":";
-		s=s+intToStr(i+66)+"}";
+		s=s+intToStr(i+kk)+"}";
 		if(i!=4) s=s+",";
 	}
 
