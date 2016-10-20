@@ -23,7 +23,7 @@ const double eps = 1e-8;
 const int inf = 0x3f3f3f3f;
 const double PI = 3.1415926535897932384626;
 
-#define EDGE_MAX_DIS					45.0
+#define EDGE_MAX_DIS					40.0
 #define OK_POINT_SIZE					13
 
 #ifdef HandsomeHow
@@ -148,6 +148,19 @@ vector<vector<pair<double,int> > >E;
 vector<Point>V;
 vector<Point>okV;
 
+void debugEdge(){
+#ifdef HandsomeHow
+	int sz = V.size();
+	for(int i = 0; i < (int)okV.size(); ++i){
+		int cnt = 0;
+		for(int j = 0; j < sz; ++j)
+			if(V[j].disToPoint(okV[i]) <= EDGE_MAX_DIS)
+				cnt++;
+		cerr<<"cnt["<<i<<"]= "<<cnt<<endl;
+	}
+#endif
+}
+
 void addPoint(){
 	double x,y;
 	input.open("okPoint.txt");
@@ -162,7 +175,7 @@ void addPoint(){
 		V.push_back(Point(x,y));
 	input.close();
 	
-//	cerr<<"get "<<V.size()<<" points"<<endl;
+	//cerr<<"get "<<V.size()<<" points"<<endl;
 
 	for(int i = 0; i < (int)okV.size(); ++i) 
 		V.push_back(okV[i]);
@@ -172,7 +185,7 @@ void initEdge(){
 	int totsz = V.size();
 	for(int i = 0; i < totsz; ++i)
 		E.push_back(vector<pair<double,int> >());
-	for(int i = 0; i < totsz; ++i)
+	for(int i = 0; i < totsz; ++i){
 		for(int j = 0; j < i; ++j){
 			double tmpDis = V[i].disToPoint(V[j]);
 			if(tmpDis <EDGE_MAX_DIS){
@@ -180,13 +193,14 @@ void initEdge(){
 				E[j].push_back(make_pair(tmpDis,i));
 			}
 		}
+	}
+		
 	/*add edge between two points that the distance between is less than 50miles*/
 
 	for(int i = 0; i < totsz; ++i)
 		sort(E[i].begin(),E[i].end());
 	//sort the edge by distance
 	
-
 }
 
 vector<int> getTar(){
@@ -199,6 +213,7 @@ vector<int> getTar(){
 		while(vis.count(idx)){
 			idx = rand()%16 + sz;
 		}
+		vis.insert(idx);
 		ret.push_back(idx);
 	}
 	return ret;
@@ -274,7 +289,7 @@ string intToStr(long long x){
 	}
 	reverse(ret.begin(),ret.end());
 	return ret;
-}
+}	
 
 string doubleToStr(double x){
 	string ret = intToStr( (long long)x );
@@ -438,6 +453,7 @@ int main(){
 	readMsg();
 	getMsg();
 	addPoint();
+	//debugEdge();
 	initEdge();
 	int setDis = 3;
 	vector<int>T = getTar(); 
