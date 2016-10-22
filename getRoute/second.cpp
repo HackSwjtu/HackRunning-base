@@ -12,7 +12,6 @@ void workRoute(){
 	string outStr,str;
 	input.open("all.data",ios::in);
 	output.open("route.data",ios::out);
-	assert(input.eof());
 	bool jump = false;
 	while(input>>str){
 		if(str == "0"){
