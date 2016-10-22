@@ -1,36 +1,14 @@
-/*************************************************************************
-    > File Name: ./handsomehow/noRun.cpp
-    > Author: HandsomeHow
-    > Mail: handsomehowyxh@gmail.com 
-    > Created Time: 2016年10月15日 星期六 18时14分09秒
- ************************************************************************/
-
-#include <cstring>
-#include <ctime>
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <queue>
-#include <stack>
-#include <set>
-#include <map>
-#include <algorithm>
-#include <string>
-#include <cmath>
+#include <bits/stdc++.h>
 using namespace std;
+
 const double eps = 1e-8;
-const int inf = 0x3f3f3f3f;
+
 const double PI = 3.1415926535897932384626;
 
+#define END_STR							"----------------"
 #define EDGE_MAX_DIS					50
 #define OK_POINT_SIZE					16
 
-#ifdef HandsomeHow
-#define dbg(x)							cerr << #x << " = " << x << endl
-#else
-#define dbg(x)
-#endif
-// (づ°ω°)づe★------------------------------------------------
 fstream input, output;
 
 double radian(double d){
@@ -67,6 +45,7 @@ public:
 
 vector<Point>okV;
 vector<Point>V;
+vector<string>fivePointJson;
 void init(){
 	okV.push_back(Point(103.985729,30.771025));
 	okV.push_back(Point(103.987364,30.768690));
@@ -114,7 +93,6 @@ string doubleToStr(double x){
 }
 
 void outPutFivePointJson(string tmps){
-	output.open("tp.data");
 	set<Point>passP,ranP;
 	int sz = V.size();
 	for(int i = 0; i < OK_POINT_SIZE; ++i){
@@ -160,9 +138,10 @@ void outPutFivePointJson(string tmps){
 		s=s+intToStr(i+fix*100+5)+"}";
 		if(i!=4) s=s+",";
 	}
+	
 	s = s + "]\",\"useZip\":false}";
-	output<<s;
-	output.close();
+	
+	fivePointJson.push_back(s);
 }
 
 double readDouble(string &s, int pos){
@@ -181,29 +160,54 @@ double readDouble(string &s, int pos){
 }
 
 string read(){
+	V.clear();
 	string flag;
 	string allLocJson;
-	input.open("route.data");
+	if(input.eof()) return "NULL";
 	input>>allLocJson;
-	
+	bool first = true;
 	while(input>>allLocJson){
+		if(first){
+			int pos = allLocJson.find("flag");
+			flag = allLocJson.substr(pos+7,13);
+			//cerr<<flag<<"efdsf"<<endl;
+			first = false;
+		}
+		if(allLocJson == END_STR)
+			break;	
+		
 		int pos = allLocJson.find("lat");
 		double lat = readDouble(allLocJson,pos+8);
 		pos = allLocJson.find("lng");
 		double lng = readDouble(allLocJson,pos+8);
 		V.push_back(Point(lng,lat));
 	} 
-	
-	int pos = allLocJson.find("flag");
-	flag = allLocJson.substr(pos+7,13);
-	input.clear();
 	return flag;
 }
 
-int main(){
+void work(){
 	string flag;
 	init();
-	flag = read();
-	outPutFivePointJson(flag);
-	return 0;
+	input.open("route.data");
+	output.open("tp.data",ios::out);
+	while(true){
+		flag = read();
+		if( flag == "NULL" ){
+			bool first = true;
+			for(auto it:fivePointJson){
+				if(first){
+					first = false;
+					output<<it<<endl<<END_STR;
+				}else{
+					output<<endl<<it<<endl<<END_STR;
+				}
+			} 
+			break;
+		}
+		outPutFivePointJson(flag);
+	}
+	input.close();
+	output.close();
 }
+
+
