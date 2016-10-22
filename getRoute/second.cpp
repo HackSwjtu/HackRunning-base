@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include "atf.cpp"
+#include "ext.cpp"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ void workRoute(){
 	string outStr,str;
 	input.open("all.data",ios::in);
 	output.open("route.data",ios::out);
-	
+	assert(input.eof());
 	bool jump = false;
 	while(input>>str){
 		if(str == "0"){
@@ -51,10 +51,7 @@ void workRoute(){
 }
 
 int main(){
-	cerr<<"1"<<endl;
 	workRoute();
-	cerr<<"2"<<endl;
 	work();
-	cerr<<"3"<<endl;
 	return 0;
 }
