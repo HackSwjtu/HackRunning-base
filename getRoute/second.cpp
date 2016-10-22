@@ -12,10 +12,11 @@ void workRoute(){
 	string outStr,str;
 	input.open("all.data",ios::in);
 	output.open("route.data",ios::out);
+
 	bool jump = false;
 	while(input>>str){
 		if(str == "0"){
-			int pos1 = outStr.find("allLocJson") - 4;
+			int pos1 = outStr.find("\"{\"allLocJson\"");
 			int pos2 = outStr.find("useZip") + 15;
 			string tmp;
 			for(int i = pos1; i < pos2; ++i)
@@ -36,11 +37,11 @@ void workRoute(){
 			outStr += str;
 		}
 	}
-	bool fitst = true;
+	bool first = true;
 	for(auto it:route)
-		if(it.size() > 50) 
-			if(fitst){
-				bool first = false;
+		if(it.size() > 600 ) 
+			if(first){
+				first = false;
 				output<<it<<endl<<END_STR;
 			}else
 				output<<endl<<it<<endl<<END_STR;
