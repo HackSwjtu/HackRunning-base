@@ -16,7 +16,7 @@ void workRoute(){
 	bool jump = false;
 	while(input>>str){
 		if(str == "0"){
-			int pos1 = outStr.find("\"{\"allLocJson\"");
+			int pos1 = outStr.find("{\"allLocJson\"");
 			int pos2 = outStr.find("useZip") + 15;
 			string tmp;
 			for(int i = pos1; i < pos2; ++i)

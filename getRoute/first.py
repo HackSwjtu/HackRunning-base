@@ -45,14 +45,14 @@ def login(username, pwd):
         "appVersion": "1.2.1",
         "source": "000049"
     }
-
-    Session = requests.Session()
-    Request = Session.post(url, headers = headers)
-    reqData = Request.content
-    print (reqData)
-    dicData = json.loads(reqData)
-    uid = dicData['data']['uid']
-    return uid
+    return 105
+    #Session = requests.Session()
+    #Request = Session.post(url, headers = headers)
+    #reqData = Request.content
+    #print (reqData)
+    #dicData = json.loads(reqData)
+    #uid = dicData['data']['uid']
+    #return uid
 
 def logout(username, pwd):
     url = 'http://gxapp.iydsj.com/api/v2/user/logout'
