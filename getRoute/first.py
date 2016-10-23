@@ -39,8 +39,8 @@ def login(username, pwd):
         "Accept-Encoding": "gzip",
         "Accept-Language": "zh-Hans-CN;q=1",
         "Content-Type": "Keep-Alive",
-        "DeviceId": "1F5576C69162C0D40D54B2F804CBF370",
-        "CustomDeviceId": "357413306433247",
+        "DeviceId": virtualDevicedId(username),
+        "CustomDeviceId": virtualCustomDeviceId(username),
         "User-Agent": "Dalvik/1.6.0 (Linux; U; Android 4.4.4; R7c Build/KTU84P)",
         "appVersion": "1.2.1",
         "source": "000049"
@@ -64,8 +64,8 @@ def logout(username, pwd):
         "Accept-Encoding": "gzip",
         "Accept-Language": "zh-Hans-CN;q=1",
         "Content-Type": "Keep-Alive",
-        "DeviceId": "1F5576C69162C0D40D54B2F804CBF370",
-        "CustomDeviceId": "357413306433247",
+         "DeviceId": virtualDevicedId(username),
+        "CustomDeviceId": virtualCustomDeviceId(username),
         "User-Agent": "Dalvik/1.6.0 (Linux; U; Android 4.4.4; R7c Build/KTU84P)",
         "appVersion":"1.2.1",
         "source":"000049"
@@ -94,8 +94,8 @@ def getOriginalJson(roomId,uid,username,pwd):
         "Accept-Encoding": "gzip",
         "Accept-Language": "zh-Hans-CN;q=1",
         "Content-Type": "Keep-Alive",
-        "DeviceId": "1F5576C69162C0D40D54B2F804CBF370",
-        "CustomDeviceId": "357413306433247",
+        "DeviceId": virtualDevicedId(username),
+        "CustomDeviceId": virtualCustomDeviceId(username),
         "User-Agent": "Dalvik/1.6.0 (Linux; U; Android 4.4.4; R7c Build/KTU84P)",
         "appVersion": "1.2.1",
         "source": "000049"
@@ -115,8 +115,8 @@ def getRoomIdJson(uid,username,pwd):
         "Accept-Encoding": "gzip",
         "Accept-Language": "zh-Hans-CN;q=1",
         "Content-Type": "Keep-Alive",
-        "DeviceId": "1F5576C69162C0D40D54B2F804CBF370",
-        "CustomDeviceId": "357413306433247",
+        "DeviceId": virtualDevicedId(username),
+        "CustomDeviceId": virtualCustomDeviceId(username),
         "User-Agent": "Dalvik/1.6.0 (Linux; U; Android 4.4.4; R7c Build/KTU84P)",
         "appVersion": "1.2.1",
         "source": "000049"
